@@ -26,6 +26,11 @@ func Generate(manifest *scanner.Manifest) error {
 		groups[category] = append(groups[category], file)
 	}
 
+	err := writeProjectSummary(manifest, groups)
+	if err != nil {
+		return err
+	}
+
 	for category, files := range groups {
 		if len(files) == 0 {
 			continue
@@ -102,4 +107,102 @@ func languageByType(fileType string) string {
 	default:
 		return ""
 	}
+}
+
+func writeProjectSummary(manifest *scanner.Manifest, groups map[string][]scanner.FileInfo) error {
+	outputPath := filepath.Join(outputDir, "project-summary.md")
+
+	var builder strings.Builder
+
+	builder.WriteString("# Repo2AI Project Summary\n\n")
+
+	builder.WriteString("## Project\n\n")
+	builder.WriteString("- Project Name: ")
+	builder.WriteString(manifest.ProjectName)
+	builder.WriteString("\n")
+	builder.WriteString("- Root Path: ")
+	builder.WriteString(manifest.RootPath)
+	builder.WriteString("\n\n")
+
+	builder.WriteString("## Statistics\n\n")
+	builder.WriteString(fmt.Sprintf("- Total Files: %d\n", manifest.TotalFiles))
+	builder.WriteString(fmt.Sprintf("- Java Files: %d\n", manifest.JavaFiles))
+	builder.WriteString(fmt.Sprintf("- XML Files: %d\n", manifest.XmlFiles))
+	builder.WriteString(fmt.Sprintf("- Ignored Files: %d\n\n", manifest.IgnoredFiles))
+
+	builder.WriteString("## Components\n\n")
+	writeComponentCount(&builder, "Controllers", groups["controllers"])
+	writeComponentCount(&builder, "Services", groups["services"])
+	writeComponentCount(&builder, "Entities", groups["entities"])
+	writeComponentCount(&builder, "Mappers", groups["mappers"])
+	writeComponentCount(&builder, "SQL", groups["sql"])
+	writeComponentCount(&builder, "Configs", groups["configs"])
+	writeComponentCount(&builder, "Others", groups["others"])
+	builder.WriteString("\n")
+
+	builder.WriteString("## Generated Context Packs\n\n")
+	writeGeneratedPack(&builder, "controllers", groups["controllers"])
+	writeGeneratedPack(&builder, "services", groups["services"])
+	writeGeneratedPack(&builder, "entities", groups["entities"])
+	writeGeneratedPack(&builder, "mappers", groups["mappers"])
+	writeGeneratedPack(&builder, "sql", groups["sql"])
+	writeGeneratedPack(&builder, "configs", groups["configs"])
+	writeGeneratedPack(&builder, "others", groups["others"])
+	builder.WriteString("\n")
+
+	builder.WriteString("## Recommended Reading Order\n\n")
+
+	index := 1
+
+	builder.WriteString(fmt.Sprintf("%d. project-summary.md\n", index))
+	index++
+
+	index = writeReadingOrder(&builder, index, "controllers", groups["controllers"])
+	index = writeReadingOrder(&builder, index, "services", groups["services"])
+	index = writeReadingOrder(&builder, index, "entities", groups["entities"])
+	index = writeReadingOrder(&builder, index, "mappers", groups["mappers"])
+	index = writeReadingOrder(&builder, index, "sql", groups["sql"])
+	index = writeReadingOrder(&builder, index, "configs", groups["configs"])
+	index = writeReadingOrder(&builder, index, "others", groups["others"])
+
+	builder.WriteString("\n")
+
+	builder.WriteString("## Files\n\n")
+	for _, file := range manifest.Files {
+		builder.WriteString("- ")
+		builder.WriteString(file.Path)
+		builder.WriteString(" [")
+		builder.WriteString(file.Category)
+		builder.WriteString("]\n")
+	}
+
+	err := os.WriteFile(outputPath, []byte(builder.String()), 0644)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Project summary generated:", filepath.ToSlash(outputPath))
+	return nil
+}
+
+func writeComponentCount(builder *strings.Builder, name string, files []scanner.FileInfo) {
+	builder.WriteString(fmt.Sprintf("- %s: %d\n", name, len(files)))
+}
+
+func writeGeneratedPack(builder *strings.Builder, category string, files []scanner.FileInfo) {
+	if len(files) == 0 {
+		return
+	}
+	builder.WriteString("- ")
+	builder.WriteString(category)
+	builder.WriteString("_01.md\n")
+}
+
+func writeReadingOrder(builder *strings.Builder, index int, category string, files []scanner.FileInfo) int {
+	if len(files) == 0 {
+		return index
+	}
+
+	builder.WriteString(fmt.Sprintf("%d. %s_01.md\n", index, category))
+	return index + 1
 }
