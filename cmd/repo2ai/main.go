@@ -29,14 +29,13 @@ func main() {
 			os.Exit(1)
 		}
 
-		err = scanner.WriteManifest(result, "output/manifest.json")
+		err = scanner.WriteManifest(result, "output")
 		if err != nil {
 			fmt.Println("Write manifest failed:", err)
 			os.Exit(1)
 		}
 
 		fmt.Println("Scan completed.")
-		fmt.Println("Manifest generated: output/manifest.json")
 
 	default:
 		fmt.Println("Unknown command:", command)
