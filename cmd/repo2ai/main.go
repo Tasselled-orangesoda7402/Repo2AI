@@ -45,6 +45,12 @@ func main() {
 			os.Exit(1)
 		}
 
+		err = packer.CleanOutput()
+		if err != nil {
+			fmt.Println("Clean output failed:", err)
+			os.Exit(1)
+		}
+
 		err = scanner.WriteManifest(result, "output")
 		if err != nil {
 			fmt.Println("Write manifest failed:", err)

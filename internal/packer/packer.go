@@ -259,3 +259,12 @@ func SetMaxPackSize(size int) {
 		maxPackSizeBytes = size
 	}
 }
+
+func CleanOutput() error {
+	err := os.RemoveAll(outputDir)
+	if err != nil {
+		return err
+	}
+
+	return os.MkdirAll(outputDir, os.ModePerm)
+}
