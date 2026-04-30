@@ -44,7 +44,6 @@ output/
  ├── sql_01.md
  └── manifest.json
 
-```
 - Structured by code category
 - Chunked to fit AI token limits
 - Clean and noise-free
